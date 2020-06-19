@@ -1,0 +1,95 @@
+CREATE DATABASE Supermercado;
+USE Supermercado;
+
+DROP TABLE IF EXISTS Provincia;
+CREATE TABLE Provincia(
+  codpro VARCHAR(2) NOT NULL,
+  nombre VARCHAR(30) NOT NULL,
+  PRIMARY KEY(codpro)
+);
+
+DROP TABLE IF EXISTS Pueblo;
+CREATE TABLE Pueblo(
+  codpue VARCHAR(5) NOT NULL,
+  nombre VARCHAR(40) NOT NULL,
+  codpro VARCHAR(2) NOT NULL,
+  PRIMARY KEY(codpue),
+  CONSTRAINT FOREIGN KEY(codpro) REFERENCES Provincia(codpro)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
+);
+
+DROP TABLE IF EXISTS Cliente;
+CREATE TABLE Cliente(
+  codcli INT NOT NULL,
+  nombre VARCHAR(50) NOT NULL,
+  direccion VARCHAR(50) NOT NULL,
+  codpostal VARCHAR(5),
+  codpue VARCHAR(5) NOT NULL,
+  PRIMARY KEY(codcli),
+  CONSTRAINT FOREIGN KEY(codpue) REFERENCES Pueblo(codpue)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE
+);
+
+DROP TABLE IF EXISTS Vendedor;
+CREATE TABLE Vendedor(
+  codven INT NOT NULL,
+  nombre VARCHAR(50) NOT NULL,
+  direccion VARCHAR(50) NOT NULL,
+  codpostal VARCHAR(6),
+  codpue VARCHAR(5) NOT NULL,
+  codjefe INT NOT NULL,
+  PRIMARY KEY(codven),
+  CONSTRAINT FOREIGN KEY(codpue) REFERENCES Pueblo(codpue)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE,
+  CONSTRAINT FOREIGN KEY(codjefe) REFERENCES Vendedor(codven)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE
+);
+
+
+DROP TABLE IF EXISTS Articulo;
+CREATE TABLE Articulo(
+  codart VARCHAR(8) NOT NULL,
+  descrip VARCHAR(40) NOT NULL,
+  precio DECIMAL(7,2) NOT NULL,
+  stock INT,
+  stockmin INT,
+  PRIMARY KEY(codart)
+);
+
+DROP TABLE IF EXISTS Factura;
+CREATE TABLE Factura(
+  codfac INT NOT NULL,
+  fecha DATE NOT NULL,
+  codcli INT,
+  codven INT,
+  iva INT,
+  dto INT,
+  PRIMARY KEY(codFac),
+  CONSTRAINT FOREIGN KEY(codcli) REFERENCES Cliente(codcli)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE,
+  CONSTRAINT FOREIGN KEY(codven) REFERENCES Vendedor(codven)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE
+);
+
+DROP TABLE IF EXISTS LineasFac;
+CREATE TABLE LineasFac(
+  codFac INT NOT NULL,
+  linea INT NOT NULL,
+  cant INT,
+  codart VARCHAR(8) NOT NULL,
+  precio DECIMAL(7,2),
+  dto INT,
+  PRIMARY KEY(codFac, linea),
+  CONSTRAINT FOREIGN KEY(codFac) REFERENCES Factura(codFac)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
+  CONSTRAINT FOREIGN KEY(codart) REFERENCES Articulo(codart)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE
+);
