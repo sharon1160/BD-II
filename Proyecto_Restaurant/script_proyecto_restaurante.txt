@@ -1,0 +1,267 @@
+CREATE DATABASE RESTAURANTE
+
+USE RESTAURANTE;
+
+-- ---
+-- Table 'Factura'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `Factura`;
+		
+CREATE TABLE `Factura` (
+  `Id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
+  `Fecha` INTEGER NULL DEFAULT NULL,
+  `Descuento` INTEGER NULL DEFAULT NULL,
+  `Id_Cliente` INTEGER NULL DEFAULT NULL,
+  `Id_Empleado` INTEGER NULL DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+);
+
+-- ---
+-- Table 'Cliente'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `Cliente`;
+		
+CREATE TABLE `Cliente` (
+  `Id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
+  `Nombre` INTEGER NULL DEFAULT NULL,
+  `Apellido` INTEGER NULL DEFAULT NULL,
+  `Direccion` INTEGER NULL DEFAULT NULL,
+  `Telefono` INTEGER NULL DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+);
+
+-- ---
+-- Table 'Reservacion'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `Reservacion`;
+		
+CREATE TABLE `Reservacion` (
+  `Id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
+  `Id_Cliente` INTEGER NULL DEFAULT NULL,
+  `Id_Sucursal` INTEGER NULL DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+);
+
+-- ---
+-- Table 'Mesa'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `Mesa`;
+		
+CREATE TABLE `Mesa` (
+  Id INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
+  NroMesa INTEGER NULL DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+);
+
+-- ---
+-- Table 'Sucursal'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `Sucursal`;
+		
+CREATE TABLE `Sucursal` (
+  `Id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
+  `Nombre` INTEGER NULL DEFAULT NULL,
+  `Direccion` INTEGER NULL DEFAULT NULL,
+  `Telefono` INTEGER NULL DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+);
+
+-- ---
+-- Table 'Gasto'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `Gasto`;
+		
+CREATE TABLE `Gasto` (
+  `Id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
+  `Recurso` INTEGER NULL DEFAULT NULL,
+  `Costo` INTEGER NULL DEFAULT NULL,
+  `Id_Sucursal` INTEGER NULL DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+);
+
+-- ---
+-- Table 'Platillo'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `Platillo`;
+		
+CREATE TABLE `Platillo` (
+  `Id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
+  `Nombre` INTEGER NULL DEFAULT NULL,
+  `Precio` INTEGER NULL DEFAULT NULL,
+  `Disponible` INTEGER NULL DEFAULT NULL,
+  `Id_LineaFactura` INTEGER NULL DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+);
+
+-- ---
+-- Table 'Empleado'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `Empleado`;
+		
+CREATE TABLE `Empleado` (
+  `Id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
+  `Nombre` INTEGER NULL DEFAULT NULL,
+  `Apellido` INTEGER NULL DEFAULT NULL,
+  `Direccion` INTEGER NULL DEFAULT NULL,
+  `Telefono` INTEGER NULL DEFAULT NULL,
+  `Vale` INTEGER NULL DEFAULT NULL,
+  `Jefe` INTEGER NULL DEFAULT NULL,
+  `Id_Sucursal` INTEGER NULL DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+);
+
+-- ---
+-- Table 'Horario'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `Horario`;
+		
+CREATE TABLE `Horario` (
+  `Id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
+  `Entrada` INTEGER NULL DEFAULT NULL,
+  `Salida` INTEGER NULL DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+);
+
+-- ---
+-- Table 'Reservacion_Mesa'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `Reservacion_Mesa`;
+		
+CREATE TABLE `Reservacion_Mesa` (
+  `Id_Reservacion` INT NULL DEFAULT NULL,
+  `Id_Mesa` INTEGER NULL DEFAULT NULL,
+  `Fecha` INTEGER NULL DEFAULT NULL,
+  `Hora` INTEGER NULL DEFAULT NULL,
+  PRIMARY KEY (`Id_Reservacion`, `Id_Mesa`)
+);
+
+-- ---
+-- Table 'Platillo_Sucursal'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `Platillo_Sucursal`;
+		
+CREATE TABLE `Platillo_Sucursal` (
+  `Id_Sucursal` INTEGER NULL DEFAULT NULL,
+  `Id_Platillo` INTEGER NULL DEFAULT NULL,
+  PRIMARY KEY (`Id_Sucursal`, `Id_Platillo`)
+);
+
+-- ---
+-- Table 'Empleado_Horario'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `Empleado_Horario`;
+		
+CREATE TABLE `Empleado_Horario` (
+  `Id_Horario` INTEGER NULL DEFAULT NULL,
+  `Id_Empleado` INTEGER NULL DEFAULT NULL,
+  PRIMARY KEY (`Id_Horario`, `Id_Empleado`)
+);
+
+-- ---
+-- Table 'LineaFactura'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `LineaFactura`;
+		
+CREATE TABLE `LineaFactura` (
+  `Id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
+  `Id_Factura` INTEGER NULL DEFAULT NULL,
+  `Cantidad` INTEGER NULL DEFAULT NULL,
+  `Id_Platillo` INTEGER NULL DEFAULT NULL,
+  PRIMARY KEY (`Id`, `Id_Factura`)
+);
+
+-- ---
+-- Foreign Keys 
+-- ---
+
+ALTER TABLE `Factura` ADD FOREIGN KEY (Id_Cliente) REFERENCES `Cliente` (`Id`);
+ALTER TABLE `Factura` ADD FOREIGN KEY (Id_Empleado) REFERENCES `Empleado` (`Id`);
+ALTER TABLE `Reservacion` ADD FOREIGN KEY (Id_Cliente) REFERENCES `Cliente` (`Id`);
+ALTER TABLE `Reservacion` ADD FOREIGN KEY (Id_Sucursal) REFERENCES `Sucursal` (`Id`);
+ALTER TABLE `Gasto` ADD FOREIGN KEY (Id_Sucursal) REFERENCES `Sucursal` (`Id`);
+ALTER TABLE `Platillo` ADD FOREIGN KEY (Id_LineaFactura) REFERENCES `LineaFactura` (`Id`);
+ALTER TABLE `Empleado` ADD FOREIGN KEY (Jefe) REFERENCES `Empleado` (`Id`);
+ALTER TABLE `Empleado` ADD FOREIGN KEY (Id_Sucursal) REFERENCES `Sucursal` (`Id`);
+ALTER TABLE `Reservacion_Mesa` ADD FOREIGN KEY (Id_Reservacion) REFERENCES `Reservacion` (`Id`);
+ALTER TABLE `Reservacion_Mesa` ADD FOREIGN KEY (Id_Mesa) REFERENCES `Mesa` (`Id`);
+ALTER TABLE `Platillo_Sucursal` ADD FOREIGN KEY (Id_Sucursal) REFERENCES `Sucursal` (`Id`);
+ALTER TABLE `Platillo_Sucursal` ADD FOREIGN KEY (Id_Platillo) REFERENCES `Platillo` (`Id`);
+ALTER TABLE `Empleado_Horario` ADD FOREIGN KEY (Id_Horario) REFERENCES `Horario` (`Id`);
+ALTER TABLE `Empleado_Horario` ADD FOREIGN KEY (Id_Empleado) REFERENCES `Empleado` (`Id`);
+ALTER TABLE `LineaFactura` ADD FOREIGN KEY (Id_Factura) REFERENCES `Factura` (`Id`);
+ALTER TABLE `LineaFactura` ADD FOREIGN KEY (Id_Platillo) REFERENCES `Platillo` (`Id`);
+
+-- ---
+-- Table Properties
+-- ---
+
+-- ALTER TABLE `Factura` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `Cliente` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `Reservacion` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `Mesa` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `Sucursal` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `Gasto` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `Platillo` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `Empleado` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `Horario` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `Reservacion_Mesa` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `Platillo_Sucursal` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `Empleado_Horario` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `LineaFactura` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- ---
+-- Test Data
+-- ---
+
+-- INSERT INTO `Factura` (`Id`,`Fecha`,`Descuento`,`Id_Cliente`,`Id_Empleado`) VALUES
+-- ('','','','','');
+-- INSERT INTO `Cliente` (`Id`,`Nombre`,`Apellido`,`Direccion`,`Telefono`) VALUES
+-- ('','','','','');
+-- INSERT INTO `Reservacion` (`Id`,`Id_Cliente`,`Id_Sucursal`) VALUES
+-- ('','','');
+-- INSERT INTO `Mesa` (`Id`,`NroMesa`) VALUES
+-- ('','');
+-- INSERT INTO `Sucursal` (`Id`,`Nombre`,`Direccion`,`Telefono`) VALUES
+-- ('','','','');
+-- INSERT INTO `Gasto` (`Id`,`Recurso`,`Costo`,`Id_Sucursal`) VALUES
+-- ('','','','');
+-- INSERT INTO `Platillo` (`Id`,`Nombre`,`Precio`,`Disponible`,`Id_LineaFactura`) VALUES
+-- ('','','','','');
+-- INSERT INTO `Empleado` (`Id`,`Nombre`,`Apellido`,`Direccion`,`Telefono`,`Vale`,`Jefe`,`Id_Sucursal`) VALUES
+-- ('','','','','','','','');
+-- INSERT INTO `Horario` (`Id`,`Entrada`,`Salida`) VALUES
+-- ('','','');
+-- INSERT INTO `Reservacion_Mesa` (`Id_Reservacion`,`Id_Mesa`,`Fecha`,`Hora`) VALUES
+-- ('','','','');
+-- INSERT INTO `Platillo_Sucursal` (`Id_Sucursal`,`Id_Platillo`) VALUES
+-- ('','');
+-- INSERT INTO `Empleado_Horario` (`Id_Horario`,`Id_Empleado`) VALUES
+-- ('','');
+-- INSERT INTO `LineaFactura` (`Id`,`Id_Factura`,`Cantidad`,`Id_Platillo`) VALUES
+-- ('','','','');
