@@ -1,2 +1,2 @@
 # BD-II
-Base de Datos II
+Base de Datos II practices
